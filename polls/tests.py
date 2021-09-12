@@ -49,6 +49,7 @@ class QuestionModelTests(TestCase):
         self.assertFalse(publish_question.can_vote())
 
     def test_can_vote_before_date(self):
+        test_time = timezone.now()
         pass
 
 
