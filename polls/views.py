@@ -16,9 +16,7 @@ from django.views import generic
 
 from django.utils import timezone
 
-
-def vote(request, question_id):
-    return HttpResponse("You're voting on question %s." % question_id)
+from django.contrib import messages
 
 
 class IndexView(generic.ListView):
