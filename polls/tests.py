@@ -4,6 +4,7 @@ import datetime
 
 from django.test import TestCase
 from django.utils import timezone
+from django.urls import reverse
 
 from .models import Question
 
@@ -38,8 +39,17 @@ class QuestionModelTests(TestCase):
         self.assertIs(recent_question.was_published_recently(), True)
 
     def test_can_vote_before_date(self):
-        test_time = timezone.now()
+        """
+        Test can_vote function that it can vote before time or not.
+        return:
+            assertFalse because it can't vote before schedule.
+        """
+        test_time = timezone.now() + datetime.timedelta(hours=23, minutes=59, seconds=59)
+        publish_question = Question(pub_date=test_time)
+        self.assertFalse(publish_question.can_vote())
 
+    def test_can_vote_before_date(self):
+        pass
 
 
 def create_question(question_text, days):
