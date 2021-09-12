@@ -48,9 +48,15 @@ class QuestionModelTests(TestCase):
         publish_question = Question(pub_date=test_time)
         self.assertFalse(publish_question.can_vote())
 
-    def test_can_vote_before_date(self):
-        test_time = timezone.now()
-        pass
+    def test_published_after_publish_date(self):
+        """
+        Test is published function that it show after the time that announced or not.
+        return:
+            assertTrue because it must show after the date
+        """
+        test_time = timezone.now() - datetime.timedelta(hours=23, minutes=59, seconds=59)
+        publish_question = Question(pub_date=test_time)
+        self.assertTrue(publish_question.is_published())
 
 
 def create_question(question_text, days):
