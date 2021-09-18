@@ -1,3 +1,9 @@
+{% if messages %}
+    {% for message in messages %}
+        <h1>{{ message }}</h1>
+    {% endfor %}
+{% endif %}
+
 {% if latest_question_list %}
 <ul>
     {% for question in latest_question_list %}

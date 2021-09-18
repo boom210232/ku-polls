@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 
 # from django.template import loader
 
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
 
 # from django.http import Http404
 
@@ -17,6 +17,8 @@ from django.views import generic
 from django.utils import timezone
 
 from django.contrib import messages
+
+from django.core.exceptions import ObjectDoesNotExist
 
 
 class IndexView(generic.ListView):
@@ -43,6 +45,26 @@ class DetailView(generic.DetailView):
         """
         return Question.objects.filter(pub_date__lte=timezone.now())
 
+    def get(self, request, *args, **kwargs):
+        """Question Error Handling."""
+        error_message = "The question cannot be accessed, "
+        try:
+            question = Question.objects.get(pk=kwargs['pk'])
+            if not question.is_published():
+                error_message += "The question has not been published yet!"
+                messages.error(request, error_message)
+                return redirect('polls:index')
+            elif not question.can_vote():
+                error_message += "The vote for this question has already ended!"
+                messages.error(request, error_message)
+                return redirect('polls:index')
+        except ObjectDoesNotExist:
+            error_message = "The question does not exist!"
+            messages.error(request, error_message)
+            return redirect('polls:index')
+        self.object = self.get_object()
+        return self.render_to_response(self.get_context_data(object=self.get_object()))
+
 
 class ResultsView(generic.DetailView):
     model = Question
@@ -55,7 +77,7 @@ def vote(request, question_id):
         selected_choice = question.choice_set.get(pk=request.POST['choice'])
     except (KeyError, Choice.DoesNotExist):
         # Redisplay the question voting form.
-        messages.warning(request, "You didn't select a choice.")
+        # messages.warning(request, "You didn't select a choice.")
         return render(request, 'polls/detail.html', {
             'question': question,
             'error_message': "You didn't select a choice.",
@@ -66,5 +88,5 @@ def vote(request, question_id):
         # Always return an HttpResponseRedirect after successfully dealing
         # with POST data. This prevents data from being posted twice if a
         # user hits the Back button.
-        messages.success(request, 'Polls already receive, Thank you')
+        # messages.success(request, 'Polls already receive, Thank you')
         return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
