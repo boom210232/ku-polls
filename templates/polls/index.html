@@ -1,7 +1,7 @@
 {% if messages %}
-    {% for message in messages %}
-        <h1>{{ message }}</h1>
-    {% endfor %}
+{% for message in messages %}
+<h1>{{ message }}</h1>
+{% endfor %}
 {% endif %}
 
 {% if latest_question_list %}
@@ -10,7 +10,7 @@
     <li>
         {{ question.question_text }}
         {% if question.can_vote %}
-            <a href="{% url 'polls:detail' question.id %}">vote</a>
+        <a href="{% url 'polls:detail' question.id %}">vote</a>
         {% endif %}
         <a href="{% url 'polls:results' question.id %}">see results</a>
     </li>
