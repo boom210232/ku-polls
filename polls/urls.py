@@ -1,3 +1,4 @@
+"""Purpose of this file purpose is save path for Urls."""
 from django.urls import path
 
 from . import views
