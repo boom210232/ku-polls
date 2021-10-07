@@ -11,6 +11,10 @@ git:
 install:
   - pip install -r requirements.txt
 
+before_script:
+   - echo "DEBUG = False" >> .env
+   - echo "SECRET_KEY = secretkeys" >> .env
+
 # script to run tests. Script can have many commands, one per line.
 script:
   - coverage run -m unittest discover -p "*_tests.py"
