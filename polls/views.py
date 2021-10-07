@@ -1,6 +1,7 @@
+"""Make this file as a view of polls."""
 # Create your views here.
 
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 
 # from django.template import loader
 
@@ -22,13 +23,16 @@ from django.core.exceptions import ObjectDoesNotExist
 
 
 class IndexView(generic.ListView):
+    """Make this class as a index view."""
+
     template_name = 'polls/index.html'
     context_object_name = 'latest_question_list'
 
     def get_queryset(self):
         """
-        Return the last five published questions (not including those set to be
-        published in the future).
+        Return the last five published questions.
+
+        (not including those set to be published in the future).
         """
         return Question.objects.filter(
             pub_date__lte=timezone.now()
@@ -36,13 +40,13 @@ class IndexView(generic.ListView):
 
 
 class DetailView(generic.DetailView):
+    """Do the class make view in detail page."""
+
     model = Question
     template_name = 'polls/detail.html'
 
     def get_queryset(self):
-        """
-        Excludes any questions that aren't published yet.
-        """
+        """Excludes any questions that aren't published yet."""
         return Question.objects.filter(pub_date__lte=timezone.now())
 
     def get(self, request, *args, **kwargs):
@@ -55,7 +59,8 @@ class DetailView(generic.DetailView):
                 messages.error(request, error_message)
                 return redirect('polls:index')
             elif not question.can_vote():
-                error_message += "The vote for this question has already ended!"
+                error_message += "The vote for this question has \
+                already ended!"
                 messages.error(request, error_message)
                 return redirect('polls:index')
         except ObjectDoesNotExist:
@@ -63,15 +68,19 @@ class DetailView(generic.DetailView):
             messages.error(request, error_message)
             return redirect('polls:index')
         self.object = self.get_object()
-        return self.render_to_response(self.get_context_data(object=self.get_object()))
+        return self.render_to_response(self.get_context_data
+                                       (object=self.get_object()))
 
 
 class ResultsView(generic.DetailView):
+    """Do this class use to show the result of votes."""
+
     model = Question
     template_name = 'polls/results.html'
 
 
 def vote(request, question_id):
+    """Do this function get direct for vote."""
     question = get_object_or_404(Question, pk=question_id)
     try:
         selected_choice = question.choice_set.get(pk=request.POST['choice'])
@@ -89,4 +98,5 @@ def vote(request, question_id):
         # with POST data. This prevents data from being posted twice if a
         # user hits the Back button.
         # messages.success(request, 'Polls already receive, Thank you')
-        return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
+        return HttpResponseRedirect(reverse('polls:results',
+                                            args=(question.id,)))

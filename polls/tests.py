@@ -136,7 +136,8 @@ class QuestionDetailViewTests(TestCase):
         future_question = create_question(question_text='Future question.', days=5)
         url = reverse('polls:detail', args=(future_question.id,))
         response = self.client.get(url)
-        self.assertEqual(response.status_code, 404)
+        self.assertRedirects(response, reverse('polls:index'), status_code=302, target_status_code=200, msg_prefix='',
+                             fetch_redirect_response=True)
 
     def test_past_question(self):
         """

@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/boom210232/ku-polls.svg?branch=iteration2)](https://travis-ci.com/boom210232/ku-polls) 
+[![codecov](https://codecov.io/gh/boom210232/ku-polls/branch/main/graph/badge.svg?token=HH9U768Q44)](https://codecov.io/gh/boom210232/ku-polls)    
 # ku-polls         
 
 ## About this application       
