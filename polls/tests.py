@@ -37,14 +37,14 @@ class QuestionModelTests(TestCase):
         self.assertIs(recent_question.was_published_recently(), True)
 
     def test_can_vote_before_date(self):
-        """Test can_vote function that it can vote before time or not."""
+        """Test can_vote function that it will not open vote before time."""
         test_time = timezone.now() + \
             datetime.timedelta(hours=23, minutes=59, seconds=59)
         publish_question = Question(pub_date=test_time)
         self.assertFalse(publish_question.can_vote())
 
     def test_can_vote_after_date(self):
-        """Test can_vote function that it can vote after time or not."""
+        """Test can_vote function that it can vote after time."""
         test_time = timezone.now() - \
             datetime.timedelta(hours=23, minutes=59, seconds=59)
         publish_question = Question(pub_date=test_time)
