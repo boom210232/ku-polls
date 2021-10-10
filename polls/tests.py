@@ -86,9 +86,6 @@ class QuestionModelTests(TestCase):
         self.assertFalse(publish_question.is_published())
 
 
-
-
-
 def create_question(question_text, days):
     """
     Create a question with the given `question_text`.
