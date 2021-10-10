@@ -37,10 +37,24 @@ class QuestionModelTests(TestCase):
         self.assertIs(recent_question.was_published_recently(), True)
 
     def test_can_vote_before_date(self):
-        """Test can_vote function that it can vote before time or not."""
+        """Test can_vote function that it will not open vote before time."""
         test_time = timezone.now() + \
             datetime.timedelta(hours=23, minutes=59, seconds=59)
         publish_question = Question(pub_date=test_time)
+        self.assertFalse(publish_question.can_vote())
+
+    def test_can_vote_after_date(self):
+        """Test can_vote function that it can vote after time."""
+        test_time = timezone.now() - \
+            datetime.timedelta(hours=23, minutes=59, seconds=59)
+        publish_question = Question(pub_date=test_time)
+        self.assertTrue(publish_question.can_vote())
+
+    def test_can_vote_after_end_polls(self):
+        """Polls can't vote after deadline."""
+        test_time = timezone.now()
+        publish_question = Question(pub_date=test_time,
+                                    end_date=test_time - datetime.timedelta(seconds=2))
         self.assertFalse(publish_question.can_vote())
 
     def test_published_after_publish_date(self):
@@ -56,6 +70,20 @@ class QuestionModelTests(TestCase):
             datetime.timedelta(hours=23, minutes=59, seconds=59)
         publish_question = Question(pub_date=test_time)
         self.assertTrue(publish_question.is_published())
+
+    def test_published_before_publish_date(self):
+        """
+        Test is published function.
+
+        Make sure that it show after the time that announced or not.
+
+        Assertion:
+            assertFalse ,the poll is published after the publication date.
+        """
+        test_time = timezone.now() + \
+            datetime.timedelta(hours=23, minutes=59, seconds=59)
+        publish_question = Question(pub_date=test_time)
+        self.assertFalse(publish_question.is_published())
 
 
 def create_question(question_text, days):
