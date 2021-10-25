@@ -8,6 +8,7 @@ def index(request):
     """Do the index function, redirect to polls index."""
     return redirect("polls:index")
 
+
 def signup(request):
     """Register a new user."""
     if request.method == 'POST':
@@ -16,11 +17,11 @@ def signup(request):
             form.save()
             username = form.cleaned_data.get('username')
             raw_passwd = form.cleaned_data.get('password')
-            user = authenticate(username=username,password=raw_passwd)
+            user = authenticate(username=username, password=raw_passwd)
             login(request, user)
             return redirect('polls')
         # what if form is not valid?
         # we should display a message in signup.html
     else:
         form = UserCreationForm()
-    return render(request, 'registration/signup.html', {'form':form})
+    return render(request, 'registration/signup.html', {'form': form})
