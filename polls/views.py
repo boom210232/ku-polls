@@ -21,6 +21,8 @@ from django.contrib import messages
 
 from django.core.exceptions import ObjectDoesNotExist
 
+from django.contrib.auth.decorators import login_required
+
 
 class IndexView(generic.ListView):
     """Make this class as a index view."""
@@ -79,6 +81,7 @@ class ResultsView(generic.DetailView):
     template_name = 'polls/results.html'
 
 
+@login_required(login_url='/accounts/login/')
 def vote(request, question_id):
     """Do this function get direct for vote."""
     question = get_object_or_404(Question, pk=question_id)
@@ -100,3 +103,5 @@ def vote(request, question_id):
         # messages.success(request, 'Polls already receive, Thank you')
         return HttpResponseRedirect(reverse('polls:results',
                                             args=(question.id,)))
+
+
