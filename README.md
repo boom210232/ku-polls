@@ -15,5 +15,8 @@ This web application is made for KU community to collect and show the result of 
 - [Task Board](https://github.com/boom210232/ku-polls/projects/1)              
 ### Iteration 2        
 - [Iteration 2 plan](https://github.com/boom210232/ku-polls/wiki/Iteration-2-Plan)          
-- [Task Board](https://github.com/boom210232/ku-polls/projects/2) 
+- [Task Board](https://github.com/boom210232/ku-polls/projects/2)          
+### Iteration 3        
+- [Iteration 3 plan](https://github.com/boom210232/ku-polls/wiki/Iteration-3-Plan)          
+- [Task Board](https://github.com/boom210232/ku-polls/projects/3) 
   
