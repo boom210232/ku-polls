@@ -1,6 +1,5 @@
 """
 The purpose of this file is.
-
 Check , make and return question and choice correctly
 """
 # Create your models here.
@@ -23,7 +22,6 @@ class Question(models.Model):
     def __str__(self):
         """
         Objective of this method made for return question text.
-
         return: Question text.
         """
         return self.question_text
@@ -31,7 +29,6 @@ class Question(models.Model):
     def was_published_recently(self):
         """
         Objective of function make for check the question was still on publish.
-
         return: boolean from time compare.
         """
         now = timezone.now()
@@ -40,7 +37,6 @@ class Question(models.Model):
     def is_published(self):
         """
         Objective of this function make for check the question is publish.
-
         return: boolean from time compare.
         """
         return self.pub_date <= timezone.now()
@@ -48,7 +44,6 @@ class Question(models.Model):
     def can_vote(self):
         """
         Objective of this function make for check the question still can vote.
-
         return: boolean from time compare.
         """
         return self.pub_date <= timezone.now() \
@@ -69,7 +64,6 @@ class Choice(models.Model):
     def __str__(self):
         """
         Objective of method is made for return choice text.
-
         return: Choice text.
         """
         return self.choice_text
