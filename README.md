@@ -18,5 +18,17 @@ This web application is made for KU community to collect and show the result of 
 - [Task Board](https://github.com/boom210232/ku-polls/projects/2)          
 ### Iteration 3        
 - [Iteration 3 plan](https://github.com/boom210232/ku-polls/wiki/Iteration-3-Plan)          
-- [Task Board](https://github.com/boom210232/ku-polls/projects/3) 
+- [Task Board](https://github.com/boom210232/ku-polls/projects/3)           
   
+
+## Running KU Polls
+
+Users provided by the initial data (users.json):     
+Here is a demo accounts for testing this application.         
+
+| Username  | Password    |
+|-----------|-------------|
+| demo001     | Tester001    |
+| demo002     | Tester002    |        
+
+Warning: Iteration3 on fixing bugs some error can appear.
