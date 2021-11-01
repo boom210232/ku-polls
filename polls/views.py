@@ -25,8 +25,6 @@ from django.contrib.auth.decorators import login_required
 
 from django.contrib.auth.models import User
 
-import logging
-
 
 class IndexView(generic.ListView):
     """Make this class as a index view."""
@@ -85,9 +83,6 @@ class ResultsView(generic.DetailView):
     template_name = 'polls/results.html'
 
 
-logs = logging.getLogger("polls")
-
-
 @login_required(login_url='/accounts/login/')
 def vote(request, question_id):
     """Do this function get direct for vote."""
@@ -111,7 +106,7 @@ def vote(request, question_id):
         vote.save()
         # selected_choice.votes += 1
         # selected_choice.save()
-        logs.info(f"{user} voted in {question}.")
+        # logs.info(f"{user} voted in {question}.")
         # Always return an HttpResponseRedirect after successfully dealing
         # with POST data. This prevents data from being posted twice if a
         # user hits the Back button.

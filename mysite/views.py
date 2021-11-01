@@ -16,8 +16,8 @@ def signup(request):
         if form.is_valid():
             form.save()
             username = form.cleaned_data.get('username')
-            raw_passwd = form.cleaned_data.get('password')
-            user = authenticate(username=username, password=raw_passwd)
+            raw_password = form.cleaned_data.get('password')
+            user = authenticate(username=username, password=raw_password)
             login(request, user)
             return redirect('polls')
         # what if form is not valid?
