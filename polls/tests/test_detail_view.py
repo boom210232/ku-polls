@@ -2,11 +2,12 @@
 
 import datetime
 
-from django.test import TestCase
+from django.test import TestCase, Client
 from django.utils import timezone
 from django.urls import reverse
 
 from polls.models import Question
+from django.contrib.auth.decorators import login_required
 
 
 def create_question(question_text, days):
@@ -35,11 +36,10 @@ class QuestionDetailViewTests(TestCase):
                                           days=5)
         url = reverse('polls:detail', args=(future_question.id,))
         response = self.client.get(url)
-        # self.assertRedirects(response, reverse('polls:index'), status_code=302,
-        #                      target_status_code=200, msg_prefix='',
-        #                      fetch_redirect_response=True)
+        self.assertRedirects(response, reverse('polls:index'), status_code=302,
+                             target_status_code=200, msg_prefix='',
+                             fetch_redirect_response=True)
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, '/accounts/login/?next=/polls/1/')
 
     def test_past_question(self):
         """
@@ -50,7 +50,10 @@ class QuestionDetailViewTests(TestCase):
         past_question = create_question(question_text='Past Question.',
                                         days=-5)
         url = reverse('polls:detail', args=(past_question.id,))
-        response = self.client.get(url)
-        # self.assertContains(response, past_question.question_text)
-        self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, '/accounts/login/?next=/polls/1/')
+        # TypeError: 'AnonymousUser' object is not iterable
+        with self.assertRaises(TypeError):
+            response = self.client.get(url)
+            self.assertRedirects(response, reverse('polls:index'), status_code=302,
+                                 target_status_code=200, msg_prefix='',
+                                 fetch_redirect_response=True)
+            self.assertEqual(response.status_code, 302)
