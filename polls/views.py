@@ -11,7 +11,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 
 from django.urls import reverse
 
-from .models import Choice, Question
+from .models import Choice, Question, Vote
 
 from django.views import generic
 
@@ -20,6 +20,10 @@ from django.utils import timezone
 from django.contrib import messages
 
 from django.core.exceptions import ObjectDoesNotExist
+
+from django.contrib.auth.decorators import login_required
+
+from django.contrib.auth.models import User
 
 
 class IndexView(generic.ListView):
@@ -79,6 +83,7 @@ class ResultsView(generic.DetailView):
     template_name = 'polls/results.html'
 
 
+@login_required(login_url='/accounts/login/')
 def vote(request, question_id):
     """Do this function get direct for vote."""
     question = get_object_or_404(Question, pk=question_id)
@@ -92,11 +97,46 @@ def vote(request, question_id):
             'error_message': "You didn't select a choice.",
         })
     else:
-        selected_choice.votes += 1
-        selected_choice.save()
+        user = request.user
+        vote = get_vote_for_user(question, user)
+        if not vote:
+            vote = Vote(user=request.user, choice=selected_choice)
+        else:
+            vote.choice = selected_choice
+        vote.save()
+        # selected_choice.votes += 1
+        # selected_choice.save()
+        # logs.info(f"{user} voted in {question}.")
         # Always return an HttpResponseRedirect after successfully dealing
         # with POST data. This prevents data from being posted twice if a
         # user hits the Back button.
         # messages.success(request, 'Polls already receive, Thank you')
         return HttpResponseRedirect(reverse('polls:results',
                                             args=(question.id,)))
+
+
+def get_vote_for_user(question: Question, user: User):
+    """Find and return an existing vote for a user on a poll question.
+
+    Returns:
+        The user's Vote or None if no vote for this poll_question
+    """
+    try:
+        return Vote.objects.get(user=user, choice__question=question)
+    except Vote.DoesNotExist:
+        return None
+
+
+@login_required
+def keep_user_previous_choice(request, question_id):
+    """
+    Get the former user choice if he already voted
+    Returns:
+        User choice if already vote.
+        """
+    question = get_object_or_404(Question, pk=question_id)
+    current_choice = get_vote_for_user(question, request.user)
+    if not current_choice:
+        return render(request, 'polls/detail.html', {'question': question, "current_choice": current_choice})
+    else:
+        return render(request, 'polls/detail.html', {'question': question, 'current_choice': current_choice.choice})
