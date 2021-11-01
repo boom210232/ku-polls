@@ -25,6 +25,8 @@ from django.contrib.auth.decorators import login_required
 
 from django.contrib.auth.models import User
 
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 
 class IndexView(generic.ListView):
     """Make this class as a index view."""
@@ -43,11 +45,13 @@ class IndexView(generic.ListView):
         ).order_by('-pub_date')[:5]
 
 
-class DetailView(generic.DetailView):
+class DetailView(generic.DetailView, LoginRequiredMixin):
     """Do the class make view in detail page."""
 
     model = Question
     template_name = 'polls/detail.html'
+    login_url = '/accounts/login/'
+    redirect_field_name = 'redirect_to'
 
     def get_queryset(self):
         """Excludes any questions that aren't published yet."""
