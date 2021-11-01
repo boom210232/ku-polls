@@ -36,9 +36,6 @@ class QuestionDetailViewTests(TestCase):
                                           days=5)
         url = reverse('polls:detail', args=(future_question.id,))
         response = self.client.get(url)
-        self.assertRedirects(response, reverse('polls:index'), status_code=302,
-                             target_status_code=200, msg_prefix='',
-                             fetch_redirect_response=True)
         self.assertEqual(response.status_code, 302)
 
     def test_past_question(self):
@@ -51,9 +48,5 @@ class QuestionDetailViewTests(TestCase):
                                         days=-5)
         url = reverse('polls:detail', args=(past_question.id,))
         # TypeError: 'AnonymousUser' object is not iterable
-        with self.assertRaises(TypeError):
-            response = self.client.get(url)
-            self.assertRedirects(response, reverse('polls:index'), status_code=302,
-                                 target_status_code=200, msg_prefix='',
-                                 fetch_redirect_response=True)
-            self.assertEqual(response.status_code, 302)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 302)
