@@ -71,9 +71,12 @@ class DetailView(generic.DetailView):
             error_message = "The question does not exist!"
             messages.error(request, error_message)
             return redirect('polls:index')
-        self.object = self.get_object()
-        return self.render_to_response(self.get_context_data
-                                       (object=self.get_object()))
+
+        question = get_object_or_404(Question, pk=kwargs['pk'])
+        current_choice = get_vote_for_user(question, request.user)
+        if not current_choice:
+            return render(request, 'polls/detail.html', {'question': question, "current_choice": current_choice})
+        return render(request, 'polls/detail.html', {'question': question, 'current_choice': current_choice.choice})
 
 
 class ResultsView(generic.DetailView):
@@ -125,18 +128,3 @@ def get_vote_for_user(question: Question, user: User):
         return Vote.objects.get(user=user, choice__question=question)
     except Vote.DoesNotExist:
         return None
-
-
-@login_required
-def keep_user_previous_choice(request, question_id):
-    """
-    Get the former user choice if he already voted
-    Returns:
-        User choice if already vote.
-        """
-    question = get_object_or_404(Question, pk=question_id)
-    current_choice = get_vote_for_user(question, request.user)
-    if not current_choice:
-        return render(request, 'polls/detail.html', {'question': question, "current_choice": current_choice})
-    else:
-        return render(request, 'polls/detail.html', {'question': question, 'current_choice': current_choice.choice})
