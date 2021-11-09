@@ -27,6 +27,16 @@ from django.contrib.auth.models import User
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+import logging
+
+from django.dispatch import receiver
+
+from datetime import datetime
+
+from django.contrib.auth.signals import user_logged_in, user_logged_out, user_login_failed
+
+log = logging.getLogger(__name__)
+
 
 class IndexView(generic.ListView):
     """Make this class as a index view."""
@@ -64,15 +74,18 @@ class DetailView(generic.DetailView, LoginRequiredMixin):
             question = Question.objects.get(pk=kwargs['pk'])
             if not question.is_published():
                 error_message += "The question has not been published yet!"
+                log.warning(f"The question has not been published yet!")
                 messages.error(request, error_message)
                 return redirect('polls:index')
             elif not question.can_vote():
                 error_message += "The vote for this question has \
                 already ended!"
+                log.warning(f"The vote for this question has already ended!")
                 messages.error(request, error_message)
                 return redirect('polls:index')
         except ObjectDoesNotExist:
             error_message = "The question does not exist!"
+            log.warning(f"The question does not exist!")
             messages.error(request, error_message)
             return redirect('polls:index')
 
@@ -113,11 +126,12 @@ def vote(request, question_id):
         vote.save()
         # selected_choice.votes += 1
         # selected_choice.save()
-        # logs.info(f"{user} voted in {question}.")
+        log.info(f"{user} voted in {question}.")
         # Always return an HttpResponseRedirect after successfully dealing
         # with POST data. This prevents data from being posted twice if a
         # user hits the Back button.
-        # messages.success(request, 'Polls already receive, Thank you')
+        messages.success(request, 'Polls already receive, Thank you')
+
         return HttpResponseRedirect(reverse('polls:results',
                                             args=(question.id,)))
 
@@ -132,3 +146,37 @@ def get_vote_for_user(question: Question, user: User):
         return Vote.objects.get(user=user, choice__question=question)
     except Vote.DoesNotExist:
         return None
+
+
+def get_client_ip(request):
+    """Get the visitor’s IP address using request headers."""
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip
+
+
+@receiver(user_logged_in)
+def user_logged_in_callback(sender, request, user, **kwargs):
+    """ This function set callback when user logged in. """
+    ip = get_client_ip(request)
+    date = datetime.now()
+    log.info(f'User {user} with {ip} login at {date}')
+
+
+@receiver(user_logged_out)
+def user_logged_out_callback(sender, request, user, **kwargs):
+    """ This function set callback when user logged out. """
+    ip = get_client_ip(request)
+    date = datetime.now()
+    log.info(f'User {user} with {ip} logout at {date}')
+
+
+@receiver(user_login_failed)
+def user_login_failed_callback(sender, request, credentials, **kwargs):
+    """ This function set callback when user make failed login. """
+    ip = get_client_ip(request)
+    date = datetime.now()
+    log.warning(f"User {credentials['username']} with {ip} have error occurred at {date}")
