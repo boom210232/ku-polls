@@ -1,0 +1,2 @@
+SECRET_KEY=django-insecure-cuyfi90#nxb(zoku44*42@-+!wsx4-haue#4j5vl8h9bx&kytf
+DEBUG=True

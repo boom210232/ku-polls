@@ -27,6 +27,8 @@ Please use these command first to initiation polls database.
 python manage.py migrate
 python manage.py loaddata users polls
 ```
+
+After load data you need to activate key by go to `mysite > note_env.txt ` then change this file to `.env` for allow to use this application.     
 Then,For running in your localhost 127.0.0.1 please use command below.
 ``` 
 python manage.py runserver
