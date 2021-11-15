@@ -22,6 +22,11 @@ This web application is made for KU community to collect and show the result of 
   
 
 ## Running KU Polls
+Please use these command first to initiation polls database.
+```
+python3 manage.py migrate
+python3 manage.py loaddata users polls
+```
 
 Users provided by the initial data (users.json):     
 Here is a demo accounts for testing this application.         
