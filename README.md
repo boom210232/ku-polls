@@ -21,7 +21,34 @@ This web application is made for KU community to collect and show the result of 
 - [Task Board](https://github.com/boom210232/ku-polls/projects/3)           
   
 
-## Running KU Polls
+## Running KU Polls        
+Before starting the process, Create a virtual environment using these command      
+ 
+For MacOS and Linux    
+```
+python3 -m venv env
+```         
+For Windows      
+``` 
+python -m venv env
+``` 
+
+Make sure that virtual environment are ready and activated.              
+For Linux and MacOS    
+```
+. env/bin/activate
+```     
+     
+For Windows     
+```
+env\Scripts\activate
+```      
+        
+Then type this command:       
+```
+python -m pip install -r requirements.txt 
+```              
+
 Please use these command first to initiation polls database.
 ```
 python manage.py migrate
@@ -40,6 +67,4 @@ Here is a demo accounts for testing this application.
 |-----------|-------------|
 | demo001     | Tester001    |
 | demo002     | Tester002    |        
-
-Warning: Iteration3 on fixing bugs some error can appear.  
-In some Operating System may use 'python3' instead of 'python'.
+  
